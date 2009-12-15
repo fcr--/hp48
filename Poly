@@ -1,0 +1,108 @@
+%%HP: T(3)A(R)F(.);
+DIR
+  PPow
+    \<< \-> n
+      \<<
+        CASE n 0 \<=
+          THEN DROP 2 F 1 \->LIST
+          END n 2 \>=
+          THEN DUP n 2 / FLOOR PPow DUP PMul
+            IF n 2 MOD
+            THEN PMul
+            ELSE SWAP DROP
+            END
+          END
+        END
+      \>>
+    \>>
+  PDRQ
+    \<< DUP SIZE { } 0 { } \-> b n r c q
+      \<< OBJ\-> 1
+        FOR I I ROLL 1 \->LIST r SWAP + 'r' STO
+          IF r SIZE n \>=
+          THEN r 1 GET b 1 GET 7 F 6 F 'c' STO q c 1 \->LIST + 'q' STO c 5 F 1 \->LIST b PMul r PAdd 'r' STO
+          END -1
+        STEP r 1 PNorm q 1 PNorm
+      \>>
+    \>>
+  PMul
+    \<< DUP SIZE { } 0 \-> p n r c
+      \<< OBJ\-> 1
+        FOR m m ROLL 'c' STO p OBJ\-> 1 SWAP
+          START c 6 F n ROLL
+          NEXT n \->LIST r 1 F 1 \->LIST + PAdd 'r' STO -1
+        STEP r 1 PNorm
+      \>>
+    \>>
+  PAdd
+    \<< DUP SIZE ROT DUP SIZE
+      IF DUP 4 PICK >
+      THEN 4 ROLL 4 ROLL
+      END \-> m b n
+      \<< m n - 1 + 1 n
+        FOR i OVER OVER GET b i GET 4 F PUTI
+        NEXT PNorm
+      \>>
+    \>>
+  GF2
+    \<< {
+      \<< 0
+      \>>
+      \<< 1
+      \>>
+      \<< NOT
+      \>>
+      \<< XOR
+      \>>
+      \<<
+      \>>
+      \<< AND
+      \>>
+      \<<
+      \>> } SWAP GET EVAL
+    \>>
+  PDeg
+    \<< 1 PNorm SIZE 1 -
+    \>>
+  PNorm
+    \<< 2 PICK SIZE \-> n s
+      \<<
+        IF n s >
+        THEN s 1 + n
+          START 1 F 1 \->LIST SWAP +
+          NEXT
+        ELSE 1
+          WHILE DUP
+            IF s n - \<=
+            THEN GETI 3 F
+            ELSE 1 + 0
+            END
+          REPEAT
+          END
+          IF DUP 2 >
+          THEN 1 - s SUB
+          ELSE DROP
+          END
+        END
+      \>>
+    \>>
+  F GFq
+  GFq
+    \<< {
+      \<< 0
+      \>>
+      \<< 1
+      \>>
+      \<< q MOD NOT
+      \>>
+      \<< + q MOD
+      \>>
+      \<< NEG q MOD
+      \>>
+      \<< * q MOD
+      \>>
+      \<< q 2 - ^ q MOD
+      \>> } SWAP GET EVAL
+    \>>
+  q 2
+END
